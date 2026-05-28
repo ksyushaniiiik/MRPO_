@@ -1,0 +1,30 @@
+digraph ER {
+  graph [rankdir=LR, splines=ortho, bgcolor="white"];
+  node [shape=record, fontname="DejaVu Sans", fontsize=10];
+  edge [fontname="DejaVu Sans", fontsize=9];
+
+  roles [label="{roles|PK role_id\lrole_code\lrole_name\l}"];
+  users [label="{users|PK user_id\lFK role_id\llogin\lpassword_hash\llast_name\lfirst_name\lpatronymic\lis_active\l}"];
+
+  categories [label="{categories|PK category_id\lcategory_name\l}"];
+  manufacturers [label="{manufacturers|PK manufacturer_id\lmanufacturer_name\l}"];
+  suppliers [label="{suppliers|PK supplier_id\lsupplier_name\l}"];
+  units [label="{units|PK unit_id\lunit_name\l}"];
+
+  products [label="{products|PK product_id\larticle\lproduct_name\lFK category_id\ldescription\lFK manufacturer_id\lFK supplier_id\lprice\lFK unit_id\lquantity\ldiscount_percent\limage_path\l}"];
+
+  order_statuses [label="{order_statuses|PK status_id\lstatus_name\l}"];
+  pickup_points [label="{pickup_points|PK pickup_point_id\laddress\l}"];
+  orders [label="{orders|PK order_id\lorder_article\lFK status_id\lFK pickup_point_id\lorder_date\ldelivery_date\l}"];
+  order_items [label="{order_items|PK order_item_id\lFK order_id\lFK product_id\lquantity\lunit_price\l}"];
+
+  roles -> users [label="1:N"];
+  categories -> products [label="1:N"];
+  manufacturers -> products [label="1:N"];
+  suppliers -> products [label="1:N"];
+  units -> products [label="1:N"];
+  order_statuses -> orders [label="1:N"];
+  pickup_points -> orders [label="1:N"];
+  orders -> order_items [label="1:N"];
+  products -> order_items [label="1:N, RESTRICT"];
+}

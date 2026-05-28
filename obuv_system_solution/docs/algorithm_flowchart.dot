@@ -1,0 +1,49 @@
+digraph Flowchart {
+  graph [rankdir=TB, bgcolor="white"];
+  node [fontname="DejaVu Sans", fontsize=10, shape=box, style="rounded"];
+  edge [fontname="DejaVu Sans", fontsize=9];
+
+  start [shape=oval, label="Старт приложения"];
+  db [label="Инициализация БД\nи подключение SQLite"];
+  login [shape=diamond, label="Выбор входа"];
+  guest [label="Вход как гость\nроль: guest"];
+  auth [label="Проверка логина и пароля\nпо таблице users"];
+  ok [shape=diamond, label="Авторизация успешна?"];
+  err [label="Показать сообщение об ошибке"];
+  role [shape=diamond, label="Определить роль"];
+
+  client [label="Гость / клиент:\nпросмотр списка товаров\nбез поиска и фильтров"];
+  manager [label="Менеджер:\nтовары + поиск + сортировка + фильтр\nпросмотр заказов"];
+  admin [label="Администратор:\nтовары + заказы + добавление\nредактирование и удаление"];
+
+  product_list [label="Вывод товаров из БД:\nфото, название, категория, описание,\nпроизводитель, поставщик, цена, склад, скидка"];
+  highlight [label="Подсветка строк:\nскидка > 15%, нет на складе,\nзачеркнутая цена при скидке"];
+  crud_product [label="CRUD товаров:\nвалидация цены и количества,\nсохранение фото 300x200,\nзапрет удаления товара из заказа"];
+  orders [label="Работа с заказами:\nпросмотр, добавление, редактирование, удаление"];
+  exit [shape=diamond, label="Пользователь нажал Выход?"];
+  end [shape=oval, label="Возврат на экран входа / завершение"];
+
+  start -> db -> login;
+  login -> guest [label="Гость"];
+  login -> auth [label="Логин/пароль"];
+  auth -> ok;
+  ok -> err [label="нет"];
+  err -> login;
+  ok -> role [label="да"];
+  guest -> client;
+  role -> client [label="client"];
+  role -> manager [label="manager"];
+  role -> admin [label="admin"];
+  client -> product_list;
+  manager -> product_list;
+  manager -> orders;
+  admin -> product_list;
+  admin -> crud_product;
+  admin -> orders;
+  product_list -> highlight -> exit;
+  crud_product -> product_list;
+  orders -> exit;
+  exit -> login [label="да"];
+  exit -> product_list [label="нет"];
+  exit -> end [label="закрыть приложение"];
+}
